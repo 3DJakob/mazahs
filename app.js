@@ -33,3 +33,16 @@ const startSpectrum = () => {
         console.log('Playback resumed successfully');
       });
 }
+
+
+
+var value = array[i]
+if (i <= 67) {
+  if (value > largest5[0]) {
+    largest5[0] = value
+  }
+} else if (i <= 135) {
+  if (value > largest5[1]) {
+    largest5[1] = value
+  }
+}
