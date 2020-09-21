@@ -1,48 +1,37 @@
-// var spectrogram = require('spectrogram');
-// import spectrogram from 'spectrogram'
+let mic, fft
 
-var spectro = Spectrogram(document.getElementById('canvas'), {
-  audio: {
-    enable: false
-  }
-});
+function setup () {
+  createCanvas(710, 400)
+  noFill()
 
-var audioContext = new AudioContext();
-var request = new XMLHttpRequest();
-request.open('GET', 'fivemore.wav', true);
-request.responseType = 'arraybuffer';
+  song = loadSound('fivemore.wav', loaded)
+  song.setVolume(0.5)
 
-request.onload = function() {
-  audioContext.decodeAudioData(request.response, function(buffer) {
-    spectro.connectSource(buffer, audioContext);
-    spectro.start();
-  });
-};
-
-request.send();
-
-
-document.querySelector('button').addEventListener('click', function() {
-    context.resume().then(() => {
-      console.log('Playback resumed successfully');
-    });
-  });
-
-const startSpectrum = () => {
-    context.resume().then(() => {
-        console.log('Playback resumed successfully');
-      });
+  // mic = new p5.AudioIn()
+  // mic.start()
+  fft = new p5.FFT()
+  fft.setInput(song)
+  // fft.setInput(mic)
 }
 
-
-
-var value = array[i]
-if (i <= 67) {
-  if (value > largest5[0]) {
-    largest5[0] = value
-  }
-} else if (i <= 135) {
-  if (value > largest5[1]) {
-    largest5[1] = value
-  }
+function loaded () {
+  song.play()
 }
+
+function draw () {
+  background(200)
+
+  const spectrum = fft.analyze()
+
+  beginShape()
+  for (i = 0; i < spectrum.length; i++) {
+    vertex(i, map(spectrum[i], 0, 255, height, 0))
+  }
+  endShape()
+}
+
+document.querySelector('button').addEventListener('click', function () {
+  userStartAudio().then(() => {
+    console.log('Playback resumed successfully')
+  })
+})
