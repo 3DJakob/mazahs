@@ -1,6 +1,23 @@
 let mic, fft
 
-usingMic = false
+const fiveMoreSong = JSON.parse(fiveMore)
+console.log(fiveMoreSong)
+
+const usingMic = true
+
+let exportedSong = []
+
+const compareSongs = (refSong, audioRec) => {
+  // Loop every five to start compare
+  for (let index = 0; index < refSong.length; index = index + 5) {
+    // Compare songs to each other
+    let diff = 0
+    for (let sampleIndex = 0; sampleIndex < audioRec.length; sampleIndex++) {
+      diff = diff + refSong[index + sampleIndex] - audioRec[sampleIndex]
+    }
+    console.log('The diff is: ' + diff)
+  }
+}
 
 const extract = (spectrum) => {
   const values = [0, 0, 0, 0, 0]
@@ -40,6 +57,7 @@ function setup () {
   if (usingMic) {
     mic = new p5.AudioIn()
     mic.start()
+    fft = new p5.FFT()
     fft.setInput(mic)
   } else {
     song = loadSound('fivemore.wav', () => loaded())
@@ -53,21 +71,65 @@ function loaded () {
   song.play()
 }
 
-function draw () {
-  background(200)
+let stopped = false
+let recording = false
 
-  const spectrum = fft.analyze()
-  console.log(extract(spectrum))
+function draw () { // Loop
+  if (stopped) {
 
-  beginShape()
-  for (i = 0; i < spectrum.length; i++) {
-    vertex(i, map(spectrum[i], 0, 255, height, 0))
+  } else {
+    background(200)
+
+    const spectrum = fft.analyze()
+    // console.log(extract(spectrum))
+    if (recording) {
+      exportedSong = [...exportedSong, ...extract(spectrum)]
+      // exportedSong.push(extract(spectrum))
+    }
+
+    beginShape()
+    for (i = 0; i < spectrum.length; i++) {
+      vertex(i, map(spectrum[i], 0, 255, height, 0))
+    }
+    endShape()
   }
-  endShape()
+}
+
+function stop () {
+  stopped = true
+}
+
+function start () {
+  stopped = false
+}
+
+function startRecord () {
+  recording = true
+}
+
+function stopRecord () {
+  recording = false
+  // console.log(exportedSong)
+  // console.log(fiveMoreSong)
+  // console.log(exportedSong)
+  compareSongs(fiveMoreSong, exportedSong)
 }
 
 document.querySelector('button').addEventListener('click', function () {
-  userStartAudio().then(() => {
+  window.userStartAudio().then(() => { // denna kod kukar upp det för chrome :( Too bad
     console.log('Playback resumed successfully')
   })
 })
+
+function exportSong () {
+  // console.log(exportedSong)
+  // const pElement = document.createElement('p')
+  let string = ''
+
+  exportedSong.forEach((line) => {
+    // pElement.textContent = pElement.textContent + line + ','
+    string = string + line + ','
+  })
+  console.log(string)
+  // document.querySelector('body').appendChild(pElement)
+}

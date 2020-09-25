@@ -4,21 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <canvas style="width: 200px; height: 200px;" id="canvas">
 
-    </canvas>
-
+<div id="buttons">
     <button>Activate lasers!</button>
 
-    <button id="dumpSong">Jesus, deliver the baby!</button>
+    <button id="dumpSong" onclick="exportSong()">Jesus, deliver the baby!</button>
 
-    <audio controls onclick="startSpectrum()">
+    <button onclick="stop()">STOPP MIN KROPP</button>
+
+    <button onclick="start()">Pappa jag är redo</button>
+
+    <button onclick="startRecord()">Jesus hör dina stön</button>
+
+    <button onclick="stopRecord()">Jesus är döv</button>
+</div>
+    <audio controls onclick="">
         <source src="fivemore.wav" type="audio/mpeg">
       Your browser does not support the audio element.
       </audio>
 
+      <script type="text/javascript" src="db/fiveMore.json"></script>
       <script src="../p5.js"></script>
       <script src="../addons/p5.sound.min.js"></script>
     <!-- <script src="./node_modules/spectrogram/spectrogram.js"></script> -->
