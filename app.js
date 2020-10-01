@@ -1,7 +1,11 @@
 let mic, fft
 
-const fiveMoreSong = JSON.parse(fiveMore)
-console.log(fiveMoreSong)
+const fiveMoreSong = JSON.parse(fiveMore) //this is a terrible song lol
+const rickRollSong = JSON.parse(rickRoll)
+const hallelujahSong = JSON.parse(hallelujah)
+
+const songBank = [fiveMoreSong, rickRollSong, hallelujahSong]
+// console.log(fiveMoreSong)
 
 const usingMic = true
 
@@ -9,14 +13,22 @@ let exportedSong = []
 
 const compareSongs = (refSong, audioRec) => {
   // Loop every five to start compare
+  let smallestDiff = 0
   for (let index = 0; index < refSong.length; index = index + 5) {
     // Compare songs to each other
     let diff = 0
     for (let sampleIndex = 0; sampleIndex < audioRec.length; sampleIndex++) {
       diff = diff + refSong[index + sampleIndex] - audioRec[sampleIndex]
     }
-    console.log('The diff is: ' + diff)
+    if (smallestDiff === 0) { // Ugly code, but works for this case, terribleness
+      smallestDiff = Math.abs(diff)
+    }
+    if (Math.abs(diff) < smallestDiff) {
+      smallestDiff = Math.abs(diff)
+    }
+    // console.log('The diff is: ' + diff) // This log is bad, too bad!
   }
+  return smallestDiff / audioRec.length
 }
 
 const extract = (spectrum) => {
@@ -112,7 +124,27 @@ function stopRecord () {
   // console.log(exportedSong)
   // console.log(fiveMoreSong)
   // console.log(exportedSong)
-  compareSongs(fiveMoreSong, exportedSong)
+  let bestMatch = {}
+  songBank.forEach(song => {
+    const match = compareSongs(song.audio, exportedSong)
+    // if (match < 0.05) {
+      // console.log('Sounds like ' + song.name)
+      const obj = {
+        threshold: match,
+        name: song.name,
+        artist: song.artist
+      }
+      if (!bestMatch.threshold) {
+        bestMatch = obj
+      } else {
+        if (bestMatch.threshold > match) {
+          bestMatch = obj
+        }
+      }
+    // }
+    console.log(match)
+  })
+  console.log('Sounds like ' + bestMatch.name)
 }
 
 document.querySelector('button').addEventListener('click', function () {
