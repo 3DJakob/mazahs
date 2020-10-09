@@ -11,7 +11,12 @@ const compareSongs = (refSong, audioRec) => {
     // Compare songs to each other
     let diff = 0
     for (let sampleIndex = 0; sampleIndex < audioRec.length; sampleIndex++) {
-      diff = diff + Math.abs(refSong[index + sampleIndex] - audioRec[sampleIndex])
+      if (refSong[index + sampleIndex] > audioRec[sampleIndex]) {
+        diff = diff + refSong[index + sampleIndex] - audioRec[sampleIndex]
+      } else {
+        diff = diff + audioRec[sampleIndex] - refSong[index + sampleIndex]
+      }
+      // diff = diff + Math.abs(refSong[index + sampleIndex] - audioRec[sampleIndex]) // This way is too processor intensive!
     }
     if (smallestDiff === null) { // Ugly code, but works for this case, terribleness
       smallestDiff = diff
