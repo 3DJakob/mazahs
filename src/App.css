@@ -37,9 +37,16 @@
   }
 }
 
+main {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
 canvas {
   border-radius: 20px;
   position: absolute;
   bottom: 20px;
-  right: 20px;
+  /* right: 20px; */
+  width: 100vw;
 }
