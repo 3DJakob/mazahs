@@ -52,6 +52,7 @@ const Song = styled.div`
 const Text = styled.h2`
   color: #fff;
   text-shadow: 0px 0px 40px 0px rgba(0,0,0,0.21);
+  text-align: center;
 `
 
 function EventCatcher (props, ref) {
